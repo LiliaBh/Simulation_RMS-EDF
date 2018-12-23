@@ -1,3 +1,5 @@
+package scheduler;
+
 import java.util.ArrayList;
 
 import java.util.Collections;
@@ -20,7 +22,7 @@ public class RMS extends Scheduler {
 		double n = allTasks.size();
 		for (int i = 0; i < allTasks.size(); i++) {
 			Task temp = allTasks.get(i);
-			ui += (double) temp.execution / temp.period;
+			ui += (double) temp.getExecution() / temp.getPeriod();
 		}
 		System.out.println(ui);
 		System.out.println(n * (Math.pow(2, 1 / n) - 1));
@@ -35,8 +37,8 @@ public class RMS extends Scheduler {
 		for (int time = 0; time < endTime; time++) {
 			for (int i = 0; i < allTasks.size(); i++) {
 				Task temp = allTasks.get(i);
-				if (time % (temp.period) == 0) {
-					for (int j = 0; j < temp.execution; j++) {
+				if (time % (temp.getPeriod()) == 0) {
+					for (int j = 0; j < temp.getExecution(); j++) {
 						toSchedule.add(temp);
 					}
 				}
@@ -52,23 +54,22 @@ public class RMS extends Scheduler {
 	}
 
 	public static void main(String[] args) {
-		Task a = new Task(6, 2, 1);
-		Task b = new Task(7, 1, 2);
-		Task c = new Task(8, 1, 3);
-		Task d = new Task(20, 3, 4);
 		ArrayList<Task> tasks = new ArrayList<Task>();
-		tasks.add(a);
-		tasks.add(b);
-		tasks.add(c);
-		tasks.add(d);
+		tasks.add(new Task(1,6,2));
+		tasks.add(new Task(2,7,1));
+		tasks.add(new Task(3, 8,1));
+		tasks.add(new Task(4, 20,3));
+
+
 		RMS schedule = new RMS(tasks);
 		if (schedule.isSchedulable()) {
 			schedule.schedule();
+
 			ArrayList<Task> result = schedule.schedule();
 			for (int i = 0; i < result.size(); i++) {
 				Task temp = result.get(i);
 				if (result.get(i) != null) {
-					System.out.print(temp.id + " ");
+					System.out.print(temp.getId() + " ");
 				} else {
 					System.out.print("x ");
 				}
