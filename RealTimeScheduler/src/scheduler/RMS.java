@@ -54,22 +54,23 @@ public class RMS extends Scheduler {
 	}
 
 	public static void main(String[] args) {
+		Task a = new Task(6, 2, 1);
+		Task b = new Task(7, 1, 2);
+		Task c = new Task(7, 1, 3);
+		Task d = new Task(20, 3, 4);
 		ArrayList<Task> tasks = new ArrayList<Task>();
-		tasks.add(new Task(1,6,2));
-		tasks.add(new Task(2,7,1));
-		tasks.add(new Task(3, 8,1));
-		tasks.add(new Task(4, 20,3));
-
-
+		tasks.add(a);
+		tasks.add(b);
+		tasks.add(c);
+		tasks.add(d);
 		RMS schedule = new RMS(tasks);
 		if (schedule.isSchedulable()) {
 			schedule.schedule();
-
 			ArrayList<Task> result = schedule.schedule();
 			for (int i = 0; i < result.size(); i++) {
 				Task temp = result.get(i);
-				if (result.get(i) != null) {
-					System.out.print(temp.getId() + " ");
+				if (temp != null) {
+					System.out.print(temp.id + " ");
 				} else {
 					System.out.print("x ");
 				}
