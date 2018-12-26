@@ -11,7 +11,9 @@ public abstract class Scheduler {
 	public void calculateEndTime() {
 		int lcm = allTasks.get(0).period;
 		boolean flag = true;
-		
+
+		//Working on:
+		/*
 		while (flag == true) {
 			for (int i = 0; i < allTasks.size(); i++) {
 				Task temp = allTasks.get(i);
@@ -27,7 +29,7 @@ public abstract class Scheduler {
 				lcm = lcm + 1;
 			}
 		}
-		
+		*/
 		endTime = lcm;
 	}
 }

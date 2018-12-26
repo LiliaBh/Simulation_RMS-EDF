@@ -45,13 +45,14 @@ public class RMS extends Scheduler {
 				Collections.sort(toSchedule);
 				ready.add(toSchedule.remove(0));
 			} else {
+				
 				ready.add(null);
 			}
 		}
 		return ready;
 	}
 
-	public static void main(String[] args) {
+/*	public static void main(String[] args) {
 		Task a = new Task(6, 2, 1);
 		Task b = new Task(7, 1, 2);
 		Task c = new Task(7, 1, 3);
@@ -81,5 +82,5 @@ public class RMS extends Scheduler {
 		} else {
 			System.out.println("Schedule is not schedulable");
 		}
-	}
+	}*/
 }
