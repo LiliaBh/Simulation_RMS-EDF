@@ -54,7 +54,7 @@ public class RMS extends Scheduler {
 	public static void main(String[] args) {
 		Task a = new Task(6, 2, 1);
 		Task b = new Task(7, 1, 2);
-		Task c = new Task(8, 1, 3);
+		Task c = new Task(7, 1, 3);
 		Task d = new Task(20, 3, 4);
 		ArrayList<Task> tasks = new ArrayList<Task>();
 		tasks.add(a);
@@ -67,7 +67,7 @@ public class RMS extends Scheduler {
 			ArrayList<Task> result = schedule.schedule();
 			for (int i = 0; i < result.size(); i++) {
 				Task temp = result.get(i);
-				if (result.get(i) != null) {
+				if (temp != null) {
 					System.out.print(temp.id + " ");
 				} else {
 					System.out.print("x ");
