@@ -53,15 +53,15 @@ public class RMS extends Scheduler {
 	}
 
 /*	public static void main(String[] args) {
-		Task a = new Task(6, 2, 1);
-		Task b = new Task(7, 1, 2);
-		Task c = new Task(7, 1, 3);
-		Task d = new Task(20, 3, 4);
+		Task a = new Task(5,1, 1);
+		Task b = new Task(3, 1, 2);
+		Task c = new Task(6, 1, 3);
+	//	Task d = new Task(20, 3, 4);
 		ArrayList<Task> tasks = new ArrayList<Task>();
 		tasks.add(a);
 		tasks.add(b);
 		tasks.add(c);
-		tasks.add(d);
+	//	tasks.add(d);
 		RMS schedule = new RMS(tasks);
 		if (schedule.isSchedulable()) {
 			schedule.schedule();
@@ -81,6 +81,5 @@ public class RMS extends Scheduler {
 			}
 		} else {
 			System.out.println("Schedule is not schedulable");
-		}
-	}*/
-}
+		}*/
+	}

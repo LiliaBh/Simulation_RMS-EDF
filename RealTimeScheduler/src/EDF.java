@@ -2,16 +2,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class EDF extends Scheduler {
+	
+	ArrayList<Task> toSchedule = new ArrayList<Task>();
 
 	public EDF(ArrayList<Task> tasks) {
 		this.allTasks = tasks;
 		calculateEndTime();
 	}
 	
-	public EDF(ArrayList<Task> tasks, int endTime) {
-		this.allTasks = tasks;
-		this.endTime = endTime;
-	}
 	
 	//Exact test = sufficient + necessary.
 	public boolean isSchedulable() {
@@ -29,51 +27,39 @@ public class EDF extends Scheduler {
 			}
 		return false;
 	}
-
-	public ArrayList<Task> schedule() {
-
-		ArrayList<Task> tempList = new ArrayList<Task>();
-		
-		for (int t=0; t<endTime; t++)
-		{
-			for (int i=0; i< allTasks.size(); i++)
-			{
-				Task task=allTasks.get(i);
-				if(t%task.period==0)
-					{
-						for(int j=0; j<task.execution; j++)
-						{
-							tempList.add(task);
-						}
-					}
-			}
-			
-			if (!(tempList.isEmpty())) 
-			{
-				Collections.sort(tempList);
-		//		tempList.add(tempList.remove(0));
-			}	
-		//	else 
-		//	{
-		//	 tempList.add(null);
-		//	}
-		}
-		
-		return tempList;
-	}
 	
-	public static void main(String[] args) 
+	public ArrayList<Task> schedule() 
 	{
-		Task a = new Task(6, 2, 1);
-		Task b = new Task(5, 1, 2);
-		Task c = new Task(10, 1, 3);
+		for (int time = 0; time < endTime; time++) 
+		{
+			for (int i = 0; i < allTasks.size(); i++) 
+			{
+				Task temp = allTasks.get(i);
+				if (time % (temp.period) == 0) 
+				{
+					for (int j = 0; j < temp.execution; j++) 
+					{
+						toSchedule.add(temp);
+					}
+				}
+			}
+		}
+		return toSchedule;
+	}
+
+	public static void main(String[] args) {
+		Task a = new Task(3,1,1);
+		Task b = new Task(5,2,2);
+		Task c = new Task(6,1,3);
 		ArrayList<Task> tasks = new ArrayList<Task>();
 		tasks.add(a);
 		tasks.add(b);
 		tasks.add(c);
-		EDF edf = new EDF(tasks);
-		if (edf.isSchedulable()) {
-			ArrayList<Task> result = edf.schedule();
+		EDF schedule = new EDF(tasks);
+		if (schedule.isSchedulable()) 
+		{
+			schedule.schedule();
+			ArrayList<Task> result = schedule.schedule();
 			for (int i = 0; i < result.size(); i++) {
 				Task temp = result.get(i);
 				if (temp != null) {
@@ -82,7 +68,18 @@ public class EDF extends Scheduler {
 					System.out.print("x ");
 				}
 
-			}}
+			}
+			
+			System.out.println();
+			for (int j = 0; j < result.size(); j++) 
+			{
+				System.out.print(j + " ");
+			}
+		} 
+		else 
+		{
+			System.out.println("Schedule is not schedulable");
+		}
 	}
 
 }
