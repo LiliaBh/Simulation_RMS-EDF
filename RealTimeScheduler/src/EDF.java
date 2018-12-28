@@ -79,30 +79,37 @@ public class EDF extends Scheduler {
 		{
 			int nd= nextDeadline(i);
 			Task current= nextTask(nd);
-			try {
+			if (current!=null) 
+			{
 				for(int j=0; j<current.execution; j++)
 					{
 						array.add(current);
 						current.remainingE--;
 					}
+				
 				//Next deadline for the just executed task.
 				current.deadline+=current.period;
-				} catch (NullPointerException e) {} ;
 				
+				//Time for prior task execution is taken into account.
 				i+=(current.execution-1);
 				reset();
+			}
+			else
+			{
+				array.add(null);
+			}
 		}
 		return array;
 	}
 
 	public static void main(String[] args) {
-		Task a = new Task(3,1,1);
-		Task b = new Task(4,2,2);
-		Task c = new Task(6,1,3);
+		Task a = new Task(3,1,2);
+		Task b = new Task(2,1,1);
+	//	Task c = new Task(6,1,3);
 		ArrayList<Task> tasks = new ArrayList<Task>();
 		tasks.add(a);
 		tasks.add(b);
-		tasks.add(c);
+	//	tasks.add(c);
 		EDF schedule = new EDF(tasks);
 		if (schedule.isSchedulable()) 
 		{
@@ -117,7 +124,6 @@ public class EDF extends Scheduler {
 				}
 
 			}
-			
 			System.out.println();
 			for (int j = 0; j < result.size(); j++) 
 			{
