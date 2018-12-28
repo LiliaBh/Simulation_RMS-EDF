@@ -21,11 +21,13 @@ public class EDF extends Scheduler {
 		}
 		
 		Task temp1= allTasks.get(0);
+		//Search for smallest deadline.
 		for(int j=0; j<allTasks.size(); j++)
 		{	
 			Task temp2= allTasks.get(j);
 			if((temp1.deadline > temp2.deadline)&&(temp1.remainingE!=0))
 			{
+				//temp2 is smaller and wasn't executed yet.
 				temp1=temp2;
 			}
 		}
@@ -40,7 +42,7 @@ public class EDF extends Scheduler {
 				Task temp = allTasks.get(i);
 				ui +=((double) temp.execution /(double) temp.period);
 			}
-			
+
 			System.out.println(ui);
 			if (ui <=1) 
 			{ 
@@ -103,27 +105,32 @@ public class EDF extends Scheduler {
 	}
 
 	public static void main(String[] args) {
-		Task a = new Task(3,1,2);
-		Task b = new Task(2,1,1);
-	//	Task c = new Task(6,1,3);
+		Task a = new Task(3,1,1);
+		Task b = new Task(4,1,2);
+		Task c = new Task(6,1,3);
+		
 		ArrayList<Task> tasks = new ArrayList<Task>();
 		tasks.add(a);
 		tasks.add(b);
-	//	tasks.add(c);
+		tasks.add(c);
+		
 		EDF schedule = new EDF(tasks);
 		if (schedule.isSchedulable()) 
 		{
-			schedule.schedule();
 			ArrayList<Task> result = schedule.schedule();
-			for (int i = 0; i < result.size(); i++) {
+			for (int i = 0; i < result.size(); i++) 
+			{
 				Task temp = result.get(i);
-				if (temp != null) {
+				if (temp != null) 
+				{
 					System.out.print(temp.id + " ");
-				} else {
+				} 
+				else 
+				{
 					System.out.print("x ");
 				}
-
 			}
+			
 			System.out.println();
 			for (int j = 0; j < result.size(); j++) 
 			{

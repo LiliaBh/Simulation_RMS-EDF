@@ -64,7 +64,6 @@ public class RMS extends Scheduler {
 	//	tasks.add(d);
 		RMS schedule = new RMS(tasks);
 		if (schedule.isSchedulable()) {
-			schedule.schedule();
 			ArrayList<Task> result = schedule.schedule();
 			for (int i = 0; i < result.size(); i++) {
 				Task temp = result.get(i);
