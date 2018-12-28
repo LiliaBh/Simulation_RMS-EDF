@@ -3,13 +3,34 @@ import java.util.Collections;
 
 public class EDF extends Scheduler {
 	
-	ArrayList<Task> toSchedule = new ArrayList<Task>();
+	ArrayList<Task> array = new ArrayList<Task>();
 
 	public EDF(ArrayList<Task> tasks) {
 		this.allTasks = tasks;
 		calculateEndTime();
 	}
 	
+	//Closest deadline.
+	public int nextDeadline(int pos)
+	{
+		if(pos==0)
+		{
+			Collections.sort(allTasks);
+			Task highest= allTasks.get(0);
+			return highest.deadline;
+		}
+		
+		Task temp1= allTasks.get(0);
+		for(int j=0; j<allTasks.size(); j++)
+		{	
+			Task temp2= allTasks.get(j);
+			if((temp1.deadline > temp2.deadline)&&(temp1.remainingE!=0))
+			{
+				temp1=temp2;
+			}
+		}
+		return temp1.deadline;
+	}
 	
 	//Exact test = sufficient + necessary.
 	public boolean isSchedulable() {
@@ -28,28 +49,55 @@ public class EDF extends Scheduler {
 		return false;
 	}
 	
-	public ArrayList<Task> schedule() 
+	//Computed through closest deadline.
+	public Task nextTask(int nextDeadline)
 	{
-		for (int time = 0; time < endTime; time++) 
+		for(int i=0; i<allTasks.size(); i++)
 		{
-			for (int i = 0; i < allTasks.size(); i++) 
-			{
-				Task temp = allTasks.get(i);
-				if (time % (temp.period) == 0) 
-				{
-					for (int j = 0; j < temp.execution; j++) 
-					{
-						toSchedule.add(temp);
-					}
-				}
+			Task t= allTasks.get(i);
+			if((nextDeadline % t.deadline)==0)
+			{ 
+				return t;
 			}
 		}
-		return toSchedule;
+		return null;
+	}
+	
+	//Method to reset the value of remainingE to given execution steps for the next iteration.
+	public void reset()
+	{
+		for(int i=0; i<allTasks.size(); i++)
+		{
+			Task t= allTasks.get(i);
+			t.remainingE=t.execution;
+		}
+	}
+	
+	public ArrayList<Task> schedule() 
+	{	
+		for(int i=0; i<endTime; i++)
+		{
+			int nd= nextDeadline(i);
+			Task current= nextTask(nd);
+			try {
+				for(int j=0; j<current.execution; j++)
+					{
+						array.add(current);
+						current.remainingE--;
+					}
+				//Next deadline for the just executed task.
+				current.deadline+=current.period;
+				} catch (NullPointerException e) {} ;
+				
+				i+=(current.execution-1);
+				reset();
+		}
+		return array;
 	}
 
 	public static void main(String[] args) {
 		Task a = new Task(3,1,1);
-		Task b = new Task(5,2,2);
+		Task b = new Task(4,2,2);
 		Task c = new Task(6,1,3);
 		ArrayList<Task> tasks = new ArrayList<Task>();
 		tasks.add(a);
