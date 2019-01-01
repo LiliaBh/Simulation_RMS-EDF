@@ -25,7 +25,7 @@ public class EDF extends Scheduler {
 		for(int j=0; j<allTasks.size(); j++)
 		{	
 			Task temp2= allTasks.get(j);
-			if((temp1.deadline > temp2.deadline)&&(temp1.remainingE!=0))
+			if(temp1.deadline > temp2.deadline)
 			{
 				//temp2 is smaller and wasn't executed yet.
 				temp1=temp2;
@@ -59,19 +59,46 @@ public class EDF extends Scheduler {
 			Task t= allTasks.get(i);
 			if((nextDeadline % t.deadline)==0)
 			{ 
-				return t;
+				if(t.remainingE!=0)
+				{
+					return t;
+				}
 			}
 		}
 		return null;
 	}
 	
 	//Method to reset the value of remainingE to given execution steps for the next iteration.
-	public void reset()
+	public void reset(int taskID)
 	{
 		for(int i=0; i<allTasks.size(); i++)
 		{
-			Task t= allTasks.get(i);
-			t.remainingE=t.execution;
+			if(allTasks.get(i).id==taskID)
+			{
+				allTasks.get(i).remainingE=allTasks.get(i).execution;
+			}
+		}
+	}
+	
+	public void refreshExecution(int taskID)
+	{
+		for(int i=0; i<allTasks.size(); i++)
+		{
+			if(taskID==allTasks.get(i).id)
+			{
+				allTasks.get(i).remainingE--;
+			}
+		}
+	}
+	
+	public void refreshDeadline(int taskID)
+	{
+		for(int i=0; i<allTasks.size(); i++)
+		{
+			if(taskID==allTasks.get(i).id)
+			{
+				allTasks.get(i).deadline+=allTasks.get(i).period;
+			}
 		}
 	}
 	
@@ -86,15 +113,17 @@ public class EDF extends Scheduler {
 				for(int j=0; j<current.execution; j++)
 					{
 						array.add(current);
-						current.remainingE--;
+						refreshExecution(current.id);
+						//current.remainingE--;
 					}
 				
 				//Next deadline for the just executed task.
-				current.deadline+=current.period;
+
+				refreshDeadline(current.id);
+				//current.deadline+=current.period;
 				
 				//Time for prior task execution is taken into account.
 				i+=(current.execution-1);
-				reset();
 			}
 			else
 			{
@@ -105,14 +134,14 @@ public class EDF extends Scheduler {
 	}
 
 	public static void main(String[] args) {
-		Task a = new Task(3,1,1);
-		Task b = new Task(4,1,2);
-		Task c = new Task(6,1,3);
+		Task a = new Task(2,1,1);
+		Task b = new Task(3,1,2);
+	//	Task c = new Task(6,1,3);
 		
 		ArrayList<Task> tasks = new ArrayList<Task>();
 		tasks.add(a);
 		tasks.add(b);
-		tasks.add(c);
+	//	tasks.add(c);
 		
 		EDF schedule = new EDF(tasks);
 		if (schedule.isSchedulable()) 
