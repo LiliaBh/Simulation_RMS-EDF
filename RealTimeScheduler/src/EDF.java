@@ -27,11 +27,21 @@ public class EDF extends Scheduler {
 			Task temp2= allTasks.get(j);
 			if(temp1.deadline > temp2.deadline)
 			{
-				//temp2 is smaller and wasn't executed yet.
 				temp1=temp2;
 			}
 		}
+			
 		return temp1.deadline;
+	}
+
+	//A method to see if the task is awaiting execution
+	public boolean started(Task t, int position)
+	{
+		if(((t.count*t.period)==0)||(position>=(t.count*t.period)))
+		{
+			return true;
+		}
+		return false;
 	}
 	
 	//Exact test = sufficient + necessary.
@@ -52,16 +62,20 @@ public class EDF extends Scheduler {
 	}
 	
 	//Computed through closest deadline.
-	public Task nextTask(int nextDeadline)
+	public Task nextTask(int nextDeadline, int pos)
 	{
 		for(int i=0; i<allTasks.size(); i++)
 		{
 			Task t= allTasks.get(i);
+			//Which task:
 			if((nextDeadline % t.deadline)==0)
 			{ 
-				if(t.remainingE!=0)
+				if(started(t,pos))
 				{
-					return t;
+					if(t.remainingE!=0)
+					{
+						return t;
+					}
 				}
 			}
 		}
@@ -98,6 +112,7 @@ public class EDF extends Scheduler {
 			if(taskID==allTasks.get(i).id)
 			{
 				allTasks.get(i).deadline+=allTasks.get(i).period;
+				allTasks.get(i).count++;
 			}
 		}
 	}
@@ -107,23 +122,26 @@ public class EDF extends Scheduler {
 		for(int i=0; i<endTime; i++)
 		{
 			int nd= nextDeadline(i);
-			Task current= nextTask(nd);
+			Task current= nextTask(nd,i);
 			if (current!=null) 
 			{
-				for(int j=0; j<current.execution; j++)
+				for(int j=0;current.remainingE!=0;j++)
 					{
 						array.add(current);
 						refreshExecution(current.id);
-						//current.remainingE--;
+						i++;
 					}
 				
 				//Next deadline for the just executed task.
+				refreshDeadline(current.id);			
+	
+				if(current.remainingE==0) 
+				{
+					reset(current.id);
+				}
 
-				refreshDeadline(current.id);
-				//current.deadline+=current.period;
-				
 				//Time for prior task execution is taken into account.
-				i+=(current.execution-1);
+				i=i-1;
 			}
 			else
 			{
@@ -134,7 +152,7 @@ public class EDF extends Scheduler {
 	}
 
 	public static void main(String[] args) {
-		Task a = new Task(2,1,1);
+		Task a = new Task(5,3,1);
 		Task b = new Task(3,1,2);
 	//	Task c = new Task(6,1,3);
 		

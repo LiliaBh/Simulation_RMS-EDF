@@ -5,6 +5,7 @@ public class Task implements Comparable<Task>{
 	int id;
 	int remainingE;
 	int deadline;
+	int count;
 	
 	public Task(int period,int execution,int id){
 		this.id = id;
@@ -12,6 +13,7 @@ public class Task implements Comparable<Task>{
 		this.execution = execution;
 		this.deadline= period;
 		this.remainingE= execution;
+		this.count=0;
 	}
 
 	  public int compareTo(Task task) {
