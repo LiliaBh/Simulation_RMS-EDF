@@ -13,31 +13,22 @@ public class EDF extends Scheduler {
 	//Closest deadline.
 	public int nextDeadline(int pos)
 	{
-		if(pos==0)
-		{
 			Collections.sort(allTasks);
 			Task highest= allTasks.get(0);
-			return highest.deadline;
-		}
-		
-		Task temp1= allTasks.get(0);
-		//Search for smallest deadline.
-		for(int j=0; j<allTasks.size(); j++)
-		{	
-			Task temp2= allTasks.get(j);
-			if(temp1.deadline > temp2.deadline)
-			{
-				temp1=temp2;
-			}
-		}
 			
-		return temp1.deadline;
+			int i=0;
+			while((!started(highest,pos))&&(i<allTasks.size()))
+			{
+				highest=allTasks.get(i);
+				i++;
+			}
+			return highest.deadline;
 	}
 
-	//A method to see if the task is awaiting execution
+	//A method to see if a task is executable.
 	public boolean started(Task t, int position)
 	{
-		if(((t.count*t.period)==0)||(position>=(t.count*t.period)))
+		if(position>=(t.count*t.period))
 		{
 			return true;
 		}
@@ -68,21 +59,19 @@ public class EDF extends Scheduler {
 		{
 			Task t= allTasks.get(i);
 			//Which task:
-			if((nextDeadline % t.deadline)==0)
+			if(nextDeadline == t.deadline)
 			{ 
-				if(started(t,pos))
+				if(started(t,pos)&&(t.remainingE!=0))
 				{
-					if(t.remainingE!=0)
-					{
-						return t;
-					}
+					return t;
 				}
 			}
 		}
 		return null;
 	}
 	
-	//Method to reset the value of remainingE to given execution steps for the next iteration.
+	//Reset the value of remainingE after task execution.
+	//Increase count value.
 	public void reset(int taskID)
 	{
 		for(int i=0; i<allTasks.size(); i++)
@@ -90,10 +79,13 @@ public class EDF extends Scheduler {
 			if(allTasks.get(i).id==taskID)
 			{
 				allTasks.get(i).remainingE=allTasks.get(i).execution;
+				allTasks.get(i).count++;
+				refreshDeadline(taskID);
 			}
 		}
 	}
 	
+	//Decrement execution number during task execution.
 	public void refreshExecution(int taskID)
 	{
 		for(int i=0; i<allTasks.size(); i++)
@@ -105,6 +97,7 @@ public class EDF extends Scheduler {
 		}
 	}
 	
+	//Calculate new deadline.
 	public void refreshDeadline(int taskID)
 	{
 		for(int i=0; i<allTasks.size(); i++)
@@ -112,7 +105,6 @@ public class EDF extends Scheduler {
 			if(taskID==allTasks.get(i).id)
 			{
 				allTasks.get(i).deadline+=allTasks.get(i).period;
-				allTasks.get(i).count++;
 			}
 		}
 	}
@@ -125,21 +117,18 @@ public class EDF extends Scheduler {
 			Task current= nextTask(nd,i);
 			if (current!=null) 
 			{
-				for(int j=0;current.remainingE!=0;j++)
+				while((current.remainingE!=0)&&(nextDeadline(i)==current.deadline))
 					{
+						i++;
 						array.add(current);
 						refreshExecution(current.id);
-						i++;
 					}
-				
-				//Next deadline for the just executed task.
-				refreshDeadline(current.id);			
-	
+						
 				if(current.remainingE==0) 
 				{
 					reset(current.id);
 				}
-
+				
 				//Time for prior task execution is taken into account.
 				i=i-1;
 			}
@@ -152,8 +141,8 @@ public class EDF extends Scheduler {
 	}
 
 	public static void main(String[] args) {
-		Task a = new Task(5,3,1);
-		Task b = new Task(3,1,2);
+		Task a = new Task(4,1,1);
+		Task b = new Task(5,3,2);
 	//	Task c = new Task(6,1,3);
 		
 		ArrayList<Task> tasks = new ArrayList<Task>();

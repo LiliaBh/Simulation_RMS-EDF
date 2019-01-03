@@ -17,7 +17,7 @@ public class Task implements Comparable<Task>{
 	}
 
 	  public int compareTo(Task task) {
-         if(this.period>= task.period){
+         if(this.deadline>= task.deadline){
         	 return 1;
          }else{
         	 return -1;
