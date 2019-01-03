@@ -17,22 +17,12 @@ public class EDF extends Scheduler {
 			Task highest= allTasks.get(0);
 			
 			int i=0;
-			while((!started(highest,pos))&&(i<allTasks.size()))
+			while((!highest.started(pos))&&(i<allTasks.size()))
 			{
 				highest=allTasks.get(i);
 				i++;
 			}
 			return highest.deadline;
-	}
-
-	//A method to see if a task is executable.
-	public boolean started(Task t, int position)
-	{
-		if(position>=(t.count*t.period))
-		{
-			return true;
-		}
-		return false;
 	}
 	
 	//Exact test = sufficient + necessary.
@@ -58,10 +48,10 @@ public class EDF extends Scheduler {
 		for(int i=0; i<allTasks.size(); i++)
 		{
 			Task t= allTasks.get(i);
-			//Which task:
+			//Find task using the deadline.
 			if(nextDeadline == t.deadline)
 			{ 
-				if(started(t,pos)&&(t.remainingE!=0))
+				if(t.started(pos)&&(t.remainingE!=0))
 				{
 					return t;
 				}
@@ -75,12 +65,14 @@ public class EDF extends Scheduler {
 	public void reset(int taskID)
 	{
 		for(int i=0; i<allTasks.size(); i++)
-		{
-			if(allTasks.get(i).id==taskID)
+		{		
+			Task t=allTasks.get(i);
+			if(t.id==taskID)
 			{
-				allTasks.get(i).remainingE=allTasks.get(i).execution;
-				allTasks.get(i).count++;
+				t.resetExecution();
+				t.increaseCount();
 				refreshDeadline(taskID);
+				allTasks.set(i,t);
 			}
 		}
 	}
@@ -90,10 +82,12 @@ public class EDF extends Scheduler {
 	{
 		for(int i=0; i<allTasks.size(); i++)
 		{
-			if(taskID==allTasks.get(i).id)
+			Task t= allTasks.get(i);
+			if(taskID==t.id)
 			{
-				allTasks.get(i).remainingE--;
+				t.remainingE--;
 			}
+			allTasks.set(i, t);
 		}
 	}
 	
@@ -102,10 +96,12 @@ public class EDF extends Scheduler {
 	{
 		for(int i=0; i<allTasks.size(); i++)
 		{
-			if(taskID==allTasks.get(i).id)
+			Task t= allTasks.get(i);
+			if(taskID==t.id)
 			{
-				allTasks.get(i).deadline+=allTasks.get(i).period;
+				t.deadline+=t.period;
 			}
+			allTasks.set(i, t);
 		}
 	}
 	
@@ -141,14 +137,14 @@ public class EDF extends Scheduler {
 	}
 
 	public static void main(String[] args) {
-		Task a = new Task(4,1,1);
-		Task b = new Task(5,3,2);
-	//	Task c = new Task(6,1,3);
+		Task a = new Task(2,1,1);
+		Task b = new Task(4,1,2);
+		Task c = new Task(6,2,3);
 		
 		ArrayList<Task> tasks = new ArrayList<Task>();
 		tasks.add(a);
 		tasks.add(b);
-	//	tasks.add(c);
+		tasks.add(c);
 		
 		EDF schedule = new EDF(tasks);
 		if (schedule.isSchedulable()) 

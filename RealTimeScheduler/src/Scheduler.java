@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public abstract class Scheduler {
 	protected int endTime;
-	protected ArrayList<Task> allTasks = new ArrayList<Task>();
+	protected ArrayList<Task> allTasks = new ArrayList<Task>();	
 
 	abstract public boolean isSchedulable();
 
