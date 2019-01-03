@@ -8,6 +8,9 @@ public abstract class Scheduler {
 
 	abstract public ArrayList<Task> schedule();
 
+	//A method to update if schedule unschedulable.
+	//abstract public void setUnschedulable(ArrayList<Task> array);
+
 	public void calculateEndTime() {
 		int lcm = allTasks.get(0).period;
 		boolean flag = true;

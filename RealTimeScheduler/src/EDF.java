@@ -22,7 +22,7 @@ public class EDF extends Scheduler {
 				highest=allTasks.get(i);
 				i++;
 			}
-			return highest.deadline;
+			return highest.getDeadline();
 	}
 	
 	//Exact test = sufficient + necessary.
@@ -31,7 +31,7 @@ public class EDF extends Scheduler {
 			for (int i = 0; i < allTasks.size(); i++) 
 			{
 				Task temp = allTasks.get(i);
-				ui +=((double) temp.execution /(double) temp.period);
+				ui +=((double) temp.getExecution() /(double) temp.getPeriod());
 			}
 
 			System.out.println(ui);
@@ -49,9 +49,9 @@ public class EDF extends Scheduler {
 		{
 			Task t= allTasks.get(i);
 			//Find task using the deadline.
-			if(nextDeadline == t.deadline)
+			if(nextDeadline == t.getDeadline())
 			{ 
-				if(t.started(pos)&&(t.remainingE!=0))
+				if(t.started(pos)&&(t.getRemainingE()!=0))
 				{
 					return t;
 				}
@@ -97,9 +97,9 @@ public class EDF extends Scheduler {
 		for(int i=0; i<allTasks.size(); i++)
 		{
 			Task t= allTasks.get(i);
-			if(taskID==t.id)
+			if(taskID==t.getId())
 			{
-				t.deadline+=t.period;
+				t.deadline+=t.getPeriod();
 			}
 			allTasks.set(i, t);
 		}
@@ -113,16 +113,16 @@ public class EDF extends Scheduler {
 			Task current= nextTask(nd,i);
 			if (current!=null) 
 			{
-				while((current.remainingE!=0)&&(nextDeadline(i)==current.deadline))
+				while((current.getRemainingE()!=0)&&(nextDeadline(i)==current.getDeadline()))
 					{
 						i++;
 						array.add(current);
-						refreshExecution(current.id);
+						refreshExecution(current.getId());
 					}
 						
-				if(current.remainingE==0) 
+				if(current.getRemainingE()==0) 
 				{
-					reset(current.id);
+					reset(current.getId());
 				}
 				
 				//Time for prior task execution is taken into account.
@@ -136,20 +136,45 @@ public class EDF extends Scheduler {
 		return array;
 	}
 
+	/*
+	public void setUnschedulable(ArrayList<Task> array) 
+	{	
+		int pos=0;
+		Task task= new Task(0,0,0);
+		for(int i=0; i<array.size();i++)
+		{
+			Task t= array.get(i);
+			if((t.getRemainingE()>0)&&(i+1>=t.getDeadline()))
+			{
+				pos=i;
+				break;
+			}
+		}
+		
+		for (int j=pos; j<array.size();j++)
+		{
+			array.set(j, task);
+		}
+	}
+	
+	*/
 	public static void main(String[] args) {
-		Task a = new Task(2,1,1);
-		Task b = new Task(4,1,2);
-		Task c = new Task(6,2,3);
+		Task a = new Task(3, 1, 1);
+		Task b = new Task(2, 1, 2);
+//		Task c = new Task(6, 1, 3);
+//		Task d = new Task(20, 3, 4);
 		
 		ArrayList<Task> tasks = new ArrayList<Task>();
 		tasks.add(a);
 		tasks.add(b);
-		tasks.add(c);
-		
+	//	tasks.add(c);
+	//	tasks.add(d);
+
 		EDF schedule = new EDF(tasks);
+		ArrayList<Task> result = schedule.schedule();
+		
 		if (schedule.isSchedulable()) 
 		{
-			ArrayList<Task> result = schedule.schedule();
 			for (int i = 0; i < result.size(); i++) 
 			{
 				Task temp = result.get(i);
@@ -171,6 +196,7 @@ public class EDF extends Scheduler {
 		} 
 		else 
 		{
+			//schedule.setUnschedulable(result);
 			System.out.println("Schedule is not schedulable");
 		}
 	}

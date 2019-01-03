@@ -52,33 +52,58 @@ public class RMS extends Scheduler {
 		return ready;
 	}
 
-/*	public static void main(String[] args) {
-		Task a = new Task(5,1, 1);
-		Task b = new Task(3, 1, 2);
-		Task c = new Task(6, 1, 3);
+	/*public void setUnschedulable(ArrayList<Task> array) 
+	{	
+		int i=0;
+		Task task= new Task(0,0,0);
+		for(i=0; i<array.size();i++)
+		{
+			Task t= array.get(i);
+			if((t.getRemainingE()!=0)&&(i>t.getDeadline()))
+			{
+				break;
+			}
+		}
+		
+		for (int j=i; j<array.size();j++)
+		{
+			array.set(j, task);
+		}
+	}
+	*/
+	public static void main(String[] args) {
+		Task a = new Task(3, 1, 1);
+		Task b = new Task(3, 2, 2);
+	//	Task c = new Task(6, 1, 3);
 	//	Task d = new Task(20, 3, 4);
 		ArrayList<Task> tasks = new ArrayList<Task>();
 		tasks.add(a);
 		tasks.add(b);
-		tasks.add(c);
-	//	tasks.add(d);
+		
+		
 		RMS schedule = new RMS(tasks);
-		if (schedule.isSchedulable()) {
+		
+		if (!schedule.isSchedulable())
+		{
+			System.out.println("Schedule is not schedulable, printing garbage:");
+		}
+
 			ArrayList<Task> result = schedule.schedule();
-			for (int i = 0; i < result.size(); i++) {
+			for (int i = 0; i < result.size(); i++) 
+			{
 				Task temp = result.get(i);
 				if (temp != null) {
 					System.out.print(temp.id + " ");
 				} else {
 					System.out.print("x ");
 				}
-
 			}
-			System.out.println();
-			for (int j = 0; j < schedule.endTime; j++) {
-				System.out.print(j + " ");
-			}
-		} else {
-			System.out.println("Schedule is not schedulable");
-		}*/
+		
+		System.out.println();
+		for (int j = 0; j < schedule.endTime; j++)
+		{
+			System.out.print(j + " ");
+		}
 	}
+	
+}
