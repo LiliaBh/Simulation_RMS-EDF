@@ -1,3 +1,5 @@
+package scheduler;
+
 import java.util.ArrayList;
 
 import java.util.Collections;
@@ -20,7 +22,7 @@ public class RMS extends Scheduler {
 		double n = allTasks.size();
 		for (int i = 0; i < allTasks.size(); i++) {
 			Task temp = allTasks.get(i);
-			ui += (double) temp.execution / temp.period;
+			ui += (double) temp.getExecution() / temp.getPeriod();
 		}
 		System.out.println(ui);
 		System.out.println(n * (Math.pow(2, 1 / n) - 1));
@@ -35,8 +37,8 @@ public class RMS extends Scheduler {
 		for (int time = 0; time < endTime; time++) {
 			for (int i = 0; i < allTasks.size(); i++) {
 				Task temp = allTasks.get(i);
-				if (time % (temp.period) == 0) {
-					for (int j = 0; j < temp.execution; j++) {
+				if (time % (temp.getPeriod()) == 0) {
+					for (int j = 0; j < temp.getExecution(); j++) {
 						toSchedule.add(temp);
 					}
 				}
@@ -45,28 +47,40 @@ public class RMS extends Scheduler {
 				Collections.sort(toSchedule);
 				ready.add(toSchedule.remove(0));
 			} else {
-				
 				ready.add(null);
 			}
 		}
 		return ready;
 	}
 
-	/*public void setUnschedulable(ArrayList<Task> array) 
-	{	
-		int i=0;
-		Task task= new Task(0,0,0);
-		for(i=0; i<array.size();i++)
-		{
-			Task t= array.get(i);
-			if((t.getRemainingE()!=0)&&(i>t.getDeadline()))
-			{
-				break;
+	public static void main(String[] args) {
+		ArrayList<Task> tasks = new ArrayList<Task>();
+		tasks.add(new Task(1,6,2));
+		tasks.add(new Task(2,7,1));
+		tasks.add(new Task(3, 8,1));
+		tasks.add(new Task(4, 20,3));
+
+
+		RMS schedule = new RMS(tasks);
+		if (schedule.isSchedulable()) {
+			schedule.schedule();
+
+			ArrayList<Task> result = schedule.schedule();
+			for (int i = 0; i < result.size(); i++) {
+				Task temp = result.get(i);
+				if (result.get(i) != null) {
+					System.out.print(temp.getId() + " ");
+				} else {
+					System.out.print("x ");
+				}
+
 			}
-		}
-		
-		for (int j=i; j<array.size();j++)
-		{
-			array.set(j, task);
+			System.out.println();
+			for (int j = 0; j < schedule.endTime; j++) {
+				System.out.print(j + " ");
+			}
+		} else {
+			System.out.println("Schedule is not schedulable");
 		}
 	}
+}

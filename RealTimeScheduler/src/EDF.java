@@ -164,7 +164,7 @@ public class EDF extends Scheduler {
 		return tmp;*/
 	
 	
-	public static void main(String[] args) {
+/*	public static void main(String[] args) {
 		Task a = new Task(3, 1, 1);
 		Task b = new Task(4, 3, 2);
 		
@@ -204,6 +204,6 @@ public class EDF extends Scheduler {
 			System.out.println("Not schedulable");
 		}
 	
-	}
+	}*/
 
 }
