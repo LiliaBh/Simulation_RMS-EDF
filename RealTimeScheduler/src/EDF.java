@@ -4,6 +4,7 @@ import java.util.Collections;
 public class EDF extends Scheduler {
 	
 	ArrayList<Task> array = new ArrayList<Task>();
+	ArrayList<Task> errorArray=new ArrayList<Task>();
 
 	public EDF(ArrayList<Task> tasks) {
 		this.allTasks = tasks;
@@ -136,46 +137,48 @@ public class EDF extends Scheduler {
 		return array;
 	}
 
-	/*
-	public void setUnschedulable(ArrayList<Task> array) 
-	{	
-		int pos=0;
+	
+
+	/*	ArrayList<Task> tmp= a;
 		Task task= new Task(0,0,0);
-		for(int i=0; i<array.size();i++)
+		int pos=tmp.size()+1;
+
+		for(int i=0; i<tmp.size();i++)
 		{
-			Task t= array.get(i);
-			if((t.getRemainingE()>0)&&(i+1>=t.getDeadline()))
+			Task t= tmp.get(i);
+			if((t.getRemainingE()>0)&&(i+1>=(t.getCount()*t.getPeriod())))
 			{
-				pos=i;
+				pos=i+1;
+				System.out.println("Task Id:" + t.getId());
+				System.out.println("Task Deadline:" + (t.getDeadline()-(t.getCount()*t.getPeriod())));
+				System.out.println("Position:" +pos);
 				break;
 			}
 		}
 		
-		for (int j=pos; j<array.size();j++)
+		
+		for (int j=pos; j<tmp.size();j++)
 		{
-			array.set(j, task);
+			tmp.set(j, task);
 		}
-	}
+		return tmp;*/
 	
-	*/
+	
 	public static void main(String[] args) {
 		Task a = new Task(3, 1, 1);
-		Task b = new Task(2, 1, 2);
-//		Task c = new Task(6, 1, 3);
-//		Task d = new Task(20, 3, 4);
+		Task b = new Task(4, 3, 2);
 		
 		ArrayList<Task> tasks = new ArrayList<Task>();
 		tasks.add(a);
 		tasks.add(b);
-	//	tasks.add(c);
-	//	tasks.add(d);
 
 		EDF schedule = new EDF(tasks);
-		ArrayList<Task> result = schedule.schedule();
+		ArrayList<Task> result =schedule.schedule();
 		
-		if (schedule.isSchedulable()) 
-		{
+		if(schedule.isSchedulable()){
+			
 			for (int i = 0; i < result.size(); i++) 
+			
 			{
 				Task temp = result.get(i);
 				if (temp != null) 
@@ -186,19 +189,21 @@ public class EDF extends Scheduler {
 				{
 					System.out.print("x ");
 				}
+			
 			}
 			
 			System.out.println();
 			for (int j = 0; j < result.size(); j++) 
-			{
+			{			
 				System.out.print(j + " ");
 			}
-		} 
-		else 
+		
+	}
+		else
 		{
-			//schedule.setUnschedulable(result);
-			System.out.println("Schedule is not schedulable");
+			System.out.println("Not schedulable");
 		}
+	
 	}
 
 }
