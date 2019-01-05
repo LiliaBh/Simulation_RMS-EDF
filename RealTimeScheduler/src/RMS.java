@@ -51,7 +51,7 @@ public class RMS extends Scheduler {
 		return ready;
 	}
 
-	public static void main(String[] args) {
+/*	public static void main(String[] args) {
 		Task a = new Task(6, 2, 1);
 		Task b = new Task(7, 1, 2);
 		Task c = new Task(8, 1, 3);
@@ -81,5 +81,5 @@ public class RMS extends Scheduler {
 		} else {
 			System.out.println("Schedule is not schedulable");
 		}
-	}
+	}*/
 }
