@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.canvas.*?>
-<?import javafx.scene.*?>
-<?import java.lang.*?>
-<?import javafx.scene.chart.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane minHeight="540" minWidth="900" prefHeight="540.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SimulatorController">
+<AnchorPane minHeight="540" minWidth="900" prefHeight="540.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SimulatorController">
    <children>
       <SplitPane layoutX="-1.0" prefHeight="540.0" prefWidth="900.0">
          <items>
@@ -32,7 +38,7 @@
                   <Button fx:id="startButton" layoutX="197.0" layoutY="492.0" mnemonicParsing="false" onAction="#handleStartSimulation" prefHeight="25.0" prefWidth="57.0" text="Start" />
                   <Button fx:id="resetButton" layoutX="15.0" layoutY="492.0" mnemonicParsing="false" onAction="#reset" text="Reset" />
                   <TextField fx:id="simulationRuntimeField" layoutX="11.0" layoutY="68.0" prefHeight="25.0" prefWidth="244.0" />
-                  <Label layoutX="12.0" layoutY="51.0" text="Simulation Runtime" />
+                  <Label layoutX="12.0" layoutY="51.0" text="Duration of the simulation" />
                   <Pane fx:id="chartPane" layoutX="261.0" layoutY="12.0" prefHeight="469.0" prefWidth="620.0" style="-fx-background-color: #FFFFFF;">
                      <children>
                         <Group fx:id="chartGroup" layoutX="13.0" layoutY="13.0" />
