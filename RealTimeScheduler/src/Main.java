@@ -19,7 +19,7 @@ public class Main extends Application {
         URL mainViewLocation = getClass().getResource(resourcePath);
         Parent root = FXMLLoader.load(mainViewLocation);
 
-        primaryStage.setTitle("RTS Scheduler Simulator");
+        primaryStage.setTitle("Real-Time Scheduler Simulator");
         primaryStage.setScene(new Scene(root, 900, 540));
         primaryStage.setResizable(false);
         primaryStage.show();

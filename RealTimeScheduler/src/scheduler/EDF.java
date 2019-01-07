@@ -44,6 +44,44 @@ public class EDF extends Scheduler {
 		return false;
 	}
 	
+	//For unschedulable tasks:
+	public ArrayList<Task> unschedule() 
+	{	
+			boolean error=false;
+			for(int i=0; ((i<endTime)&& !error); i++)
+			{
+				int nd= nextDeadline(i);
+				Task current= nextTask(nd,i);
+				if (current!=null) 
+				{
+					while((current.getRemainingE()!=0)&&(nextDeadline(i)==current.getDeadline()))
+						{
+							i++;
+							array.add(current);
+							refreshExecution(current.getId());
+							if((current.getRemainingE()!=0)&& (current.getDeadline()==i))
+							{
+								error=true;
+								break;
+							}
+						}
+							
+					if(current.getRemainingE()==0) 
+					{
+						reset(current.getId());
+					}
+					
+					//Time for prior task execution is taken into account.
+					i=i-1;
+				}
+				else
+				{
+					array.add(null);
+				}
+			}
+			return array;
+	}
+	
 	//Computed through closest deadline.
 	public Task nextTask(int nextDeadline, int pos)
 	{
