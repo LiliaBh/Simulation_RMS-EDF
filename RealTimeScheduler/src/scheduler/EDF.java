@@ -4,14 +4,16 @@ import java.util.Collections;
 
 public class EDF extends Scheduler {
 	
-	ArrayList<Task> array = new ArrayList<Task>();
-	ArrayList<Task> errorArray=new ArrayList<Task>();
-
 	public EDF(ArrayList<Task> tasks) {
 		this.allTasks = tasks;
 		calculateEndTime();
 	}
 	
+	public EDF(ArrayList<Task> tasks, int endTime) {
+		this.allTasks = tasks;
+		this.endTime = endTime;
+	}
+
 	//Closest deadline.
 	public int nextDeadline(int pos)
 	{
@@ -47,6 +49,7 @@ public class EDF extends Scheduler {
 	//For unschedulable tasks:
 	public ArrayList<Task> unschedule() 
 	{	
+			ArrayList<Task> array = new ArrayList<Task>();
 			boolean error=false;
 			for(int i=0; ((i<endTime)&& !error); i++)
 			{
@@ -147,6 +150,7 @@ public class EDF extends Scheduler {
 	
 	public ArrayList<Task> schedule() 
 	{	
+		ArrayList<Task> array = new ArrayList<Task>();
 		for(int i=0; i<endTime; i++)
 		{
 			int nd= nextDeadline(i);
@@ -175,74 +179,49 @@ public class EDF extends Scheduler {
 		}
 		return array;
 	}
-
-	
-
-	/*	ArrayList<Task> tmp= a;
-		Task task= new Task(0,0,0);
-		int pos=tmp.size()+1;
-
-		for(int i=0; i<tmp.size();i++)
-		{
-			Task t= tmp.get(i);
-			if((t.getRemainingE()>0)&&(i+1>=(t.getCount()*t.getPeriod())))
-			{
-				pos=i+1;
-				System.out.println("Task Id:" + t.getId());
-				System.out.println("Task Deadline:" + (t.getDeadline()-(t.getCount()*t.getPeriod())));
-				System.out.println("Position:" +pos);
-				break;
-			}
-		}
 		
 		
-		for (int j=pos; j<tmp.size();j++)
-		{
-			tmp.set(j, task);
-		}
-		return tmp;*/
+	public Task lastTask(ArrayList<Task> result)
+	{
+		Task t= result.get(result.size()-1);
+		return t;
+	}
 	
-	
-/*	public static void main(String[] args) {
-		Task a = new Task(3, 1, 1);
-		Task b = new Task(4, 3, 2);
+	/*public static void main(String[] args) 
+	{
+		Task a = new Task(6, 3, 1);
+		Task b = new Task(3, 2, 2);
 		
 		ArrayList<Task> tasks = new ArrayList<Task>();
 		tasks.add(a);
 		tasks.add(b);
 
 		EDF schedule = new EDF(tasks);
-		ArrayList<Task> result =schedule.schedule();
 		
-		if(schedule.isSchedulable()){
+		if(!schedule.isSchedulable())
+		{
+			ArrayList<Task> result1=schedule.unschedule();
 			
-			for (int i = 0; i < result.size(); i++) 
+			Task t= schedule.lastTask(result1);
+			System.out.println("Not schedulable: task " + t.getId() + " does not meet its deadline: "+t.getDeadline());
 			
+			for(int i=0; i<result1.size(); i++)
 			{
-				Task temp = result.get(i);
-				if (temp != null) 
+				Task temp=result1.get(i);
+				if(temp!=null)
 				{
-					System.out.print(temp.id + " ");
-				} 
-				else 
+					System.out.print(temp.getId()+" ");
+				}
+				else
 				{
 					System.out.print("x ");
 				}
-			
 			}
-			
-			System.out.println();
-			for (int j = 0; j < result.size(); j++) 
-			{			
-				System.out.print(j + " ");
-			}
-		
-	}
+		}
 		else
 		{
-			System.out.println("Not schedulable");
+			System.out.println("schedulable");
 		}
-	
 	}*/
 
 }

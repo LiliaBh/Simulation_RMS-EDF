@@ -30,7 +30,9 @@ public class SchedulerFactory {
             case RMS:
                 scheduler = new RMS(tasks);
                 break;
-            // TODO: add EDF case
+            case EDF:
+            	scheduler = new EDF(tasks);
+            	break;
             default:
                 throw new UnsupportedOperationException();
         }
@@ -46,7 +48,9 @@ public class SchedulerFactory {
             case RMS:
                 scheduler = new RMS(tasks, executionTime);
                 break;
-            // TODO: add EDF case
+            case EDF:
+            	scheduler = new EDF(tasks, executionTime);
+            	break;
             default:
             throw new UnsupportedOperationException();
         }

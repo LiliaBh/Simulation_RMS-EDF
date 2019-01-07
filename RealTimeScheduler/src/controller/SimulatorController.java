@@ -1,12 +1,22 @@
 package controller;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.ResourceBundle;
+
 import controller.helpers.ModalWindow;
 import exception.NegativeNumberException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -16,11 +26,6 @@ import javafx.scene.text.Font;
 import scheduler.Scheduler;
 import scheduler.SchedulerFactory;
 import scheduler.Task;
-
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.ResourceBundle;
 
 public class SimulatorController implements Initializable {
 
@@ -108,7 +113,7 @@ public class SimulatorController implements Initializable {
 
         if ( !(period < 0 || execution < 0)) {
             tasks.add(
-                new Task(currentTaskId, period, execution)
+                new Task(period, execution, currentTaskId)
             );
             currentTaskId++;
             refreshTable();
@@ -163,6 +168,8 @@ public class SimulatorController implements Initializable {
 
         for (Task selectedTask: selectedTasks) {
             removeTask(selectedTask.getId());
+            //Added:
+            currentTaskId--;
         }
 
         refreshTable();
