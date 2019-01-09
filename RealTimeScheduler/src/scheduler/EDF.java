@@ -5,12 +5,18 @@ import java.util.Collections;
 public class EDF extends Scheduler {
 	
 	public EDF(ArrayList<Task> tasks) {
-		this.allTasks = tasks;
+		this.allTasks = new ArrayList<Task>();
+		
+
+		
 		calculateEndTime();
 	}
 	
 	public EDF(ArrayList<Task> tasks, int endTime) {
-		this.allTasks = tasks;
+		this.allTasks = new ArrayList<Task>();
+		
+
+		
 		this.endTime = endTime;
 	}
 
