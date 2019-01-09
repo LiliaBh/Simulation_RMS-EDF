@@ -49,6 +49,50 @@ public class RMS extends Scheduler {
 				ready.add(null);
 			}
 		}
+		if(!(isSchedulable())){
+			checkSchedule(ready);
+		}else{
+			String report = "";
+			generateReport(report);
+		}
 		return ready;
 	}
+	public void checkSchedule(ArrayList<Task> ready){
+		boolean flag = false;
+		String report = "";
+		for(int i = 0;i<allTasks.size();i++){
+			Task temp = allTasks.get(i);
+			int period = temp.period;
+			int execution = temp.execution;
+			int count = 0;
+			for(int j = 0;j<ready.size();j++){
+				if(!(ready.get(j)==(null)))
+				{
+				Task test = ready.get(j);
+				if(test.id == temp.id){
+					count++;
+				}
+				if(j!=0 && j%period==0){
+					if(count<execution){
+						flag = true;
+						report = "Task " +temp.id + " is missing " + (execution-count)+" execution(s) at time " + j;	
+					}
+				}
+			}
+		}
+			if(flag){
+				break;
+			}
+		}
+		generateReport(report);
+		
+	}
+	public String generateReport(String report){
+		if(report==("")){
+			return "Simulation sucessful";
+		}else{
+			return report;
+		}
+	}
+
 }
