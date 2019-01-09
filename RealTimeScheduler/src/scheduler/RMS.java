@@ -53,7 +53,7 @@ public class RMS extends Scheduler {
 			checkSchedule(ready);
 		}else{
 			String report = "";
-			generateReport(report);
+			setReport(report);
 		}
 		return ready;
 	}
@@ -84,15 +84,8 @@ public class RMS extends Scheduler {
 				break;
 			}
 		}
-		generateReport(report);
+		setReport(report);
 		
-	}
-	public String generateReport(String report){
-		if(report==("")){
-			return "Simulation sucessful";
-		}else{
-			return report;
-		}
 	}
 
 }

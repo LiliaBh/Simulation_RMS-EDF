@@ -4,10 +4,15 @@ import java.util.ArrayList;
 public abstract class Scheduler {
 	protected int endTime;
 	protected ArrayList<Task> allTasks = new ArrayList<Task>();	
-
+	protected String report;
+	
 	abstract public boolean isSchedulable();
 
 	abstract public ArrayList<Task> schedule();
+	
+	public void setReport(String report) {
+		this.report = report;
+	}
 
 	//A method to update if schedule unschedulable.
 	//abstract public void setUnschedulable(ArrayList<Task> array);
@@ -37,8 +42,12 @@ public abstract class Scheduler {
 		return endTime;
 	}
 
-	public String generateReport()
+	public String getReport()
     {
-        return "Simulation successful.";
+		if (this.report == "") {
+			this.report = "Simulation successful";
+		}
+			
+        return report;
     }
 }

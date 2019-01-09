@@ -148,7 +148,7 @@ public class SimulatorController implements Initializable {
 		}
 		drawChart(schedule, scheduler.getEndTime());
 		System.out.println("" + chartGroup.getChildren().size());
-		ModalWindow.displayReport(schedulerName + " Scheduler", scheduler.generateReport());
+		ModalWindow.displayReport(schedulerName + " Scheduler", scheduler.getReport());
 	}
 
 	public void deleteTask() {
