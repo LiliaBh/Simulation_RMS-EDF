@@ -1,4 +1,5 @@
 package scheduler;
+
 import java.util.ArrayList;
 
 import java.util.Collections;
@@ -10,7 +11,7 @@ public class RMS extends Scheduler {
 		this.allTasks = tasks;
 		calculateEndTime();
 	}
-	
+
 	public RMS(ArrayList<Task> tasks, int endTime) {
 		this.allTasks = tasks;
 		this.endTime = endTime;
@@ -33,59 +34,83 @@ public class RMS extends Scheduler {
 
 	public ArrayList<Task> schedule() {
 		ArrayList<Task> ready = new ArrayList<Task>();
+
 		for (int time = 0; time < endTime; time++) {
+
 			for (int i = 0; i < allTasks.size(); i++) {
 				Task temp = allTasks.get(i);
+
 				if (time % (temp.period) == 0) {
+
 					for (int j = 0; j < temp.execution; j++) {
 						toSchedule.add(temp);
 					}
 				}
 			}
+
 			if (!(toSchedule.isEmpty())) {
 				Collections.sort(toSchedule);
 				ready.add(toSchedule.remove(0));
+
 			} else {
 				ready.add(null);
 			}
 		}
-		if(!(isSchedulable())){
-			checkSchedule(ready);
-		}else{
-			String report = "";
+
+		if (!(isSchedulable())) {
+			int errorAt = checkSchedule(ready);
+			for (int i = ready.size() - 1 ; i >= errorAt; i--) {
+				ready.remove(i);
+			}
+			
+		} else {
+			String report = "Successfully Scheduled";
 			setReport(report);
 		}
+
 		return ready;
 	}
-	public void checkSchedule(ArrayList<Task> ready){
+
+	public int checkSchedule(ArrayList<Task> ready) {
 		boolean flag = false;
-		String report = "";
-		for(int i = 0;i<allTasks.size();i++){
+		String report = "Successfully Scheduled";
+		int errorAt = ready.size();
+		
+		for (int i = 0; i < allTasks.size(); i++) {
 			Task temp = allTasks.get(i);
 			int period = temp.period;
 			int execution = temp.execution;
 			int count = 0;
-			for(int j = 0;j<ready.size();j++){
-				if(!(ready.get(j)==(null)))
-				{
+
+			for (int j = 0; j < ready.size(); j++) {
 				Task test = ready.get(j);
-				if(test.id == temp.id){
-					count++;
-				}
-				if(j!=0 && j%period==0){
-					if(count<execution){
-						flag = true;
-						report = "Task " +temp.id + " is missing " + (execution-count)+" execution(s) at time " + j;	
+				if (!(test == (null))) {
+			
+					if (test.id == temp.id) {
+						count++;
+					}
+					
+					if (j != 0 && (j + 1) % period == 0) {
+					
+						if (count < execution) {
+							flag = true;
+							report = "Task " + temp.id + " is missing its deadline " + ( j + 1) + ": " + (execution - count) + " execution step(s) missing.";
+							errorAt = j + 1 ;
+							break;
+						}
+						count=0;
+						
 					}
 				}
 			}
-		}
-			if(flag){
+			
+			if (flag) {
 				break;
 			}
 		}
-		setReport(report);
 		
+		setReport(report);
+		return errorAt;
 	}
 
 }

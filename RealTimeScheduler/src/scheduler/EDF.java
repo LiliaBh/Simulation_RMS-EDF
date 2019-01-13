@@ -5,18 +5,12 @@ import java.util.Collections;
 public class EDF extends Scheduler {
 	
 	public EDF(ArrayList<Task> tasks) {
-		this.allTasks = new ArrayList<Task>();
-		
-
-		
+		this.allTasks = tasks;	
 		calculateEndTime();
 	}
-	
-	public EDF(ArrayList<Task> tasks, int endTime) {
-		this.allTasks = new ArrayList<Task>();
-		
 
-		
+	public EDF(ArrayList<Task> tasks, int endTime) {
+		this.allTasks = tasks;	
 		this.endTime = endTime;
 	}
 
@@ -52,9 +46,19 @@ public class EDF extends Scheduler {
 		return false;
 	}
 	
+	public ArrayList<Task> schedule()
+	{
+		if (isSchedulable()) {
+			return generateWorkingSchedule();
+		} else {
+			return generateNonWorkingSchedule();
+		}
+	}
 	//For unschedulable tasks:
-	public ArrayList<Task> unschedule() 
+	
+	private ArrayList<Task> generateNonWorkingSchedule() 
 	{	
+			String report= "";
 			ArrayList<Task> array = new ArrayList<Task>();
 			boolean error=false;
 			for(int i=0; ((i<endTime)&& !error); i++)
@@ -88,6 +92,9 @@ public class EDF extends Scheduler {
 					array.add(null);
 				}
 			}
+			Task t= lastTask(array);
+			report="The tasks are not schedulable: Task " + t.getId() + " does not meet its deadline "+t.getDeadline() +".";
+			setReport(report);
 			return array;
 	}
 	
@@ -154,8 +161,9 @@ public class EDF extends Scheduler {
 		}
 	}
 	
-	public ArrayList<Task> schedule() 
+	private ArrayList<Task> generateWorkingSchedule() 
 	{	
+		String report= "Successfully Scheduled";
 		ArrayList<Task> array = new ArrayList<Task>();
 		for(int i=0; i<endTime; i++)
 		{
@@ -183,9 +191,10 @@ public class EDF extends Scheduler {
 				array.add(null);
 			}
 		}
+		setReport(report);
 		return array;
 	}
-		
+
 		
 	public Task lastTask(ArrayList<Task> result)
 	{
@@ -193,10 +202,10 @@ public class EDF extends Scheduler {
 		return t;
 	}
 	
-	/*public static void main(String[] args) 
+ /*	public static void main(String[] args) 
 	{
-		Task a = new Task(6, 3, 1);
-		Task b = new Task(3, 2, 2);
+		Task a = new Task(2, 2, 1);
+		Task b = new Task(3, 1, 2);
 		
 		ArrayList<Task> tasks = new ArrayList<Task>();
 		tasks.add(a);

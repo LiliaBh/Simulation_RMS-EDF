@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
+import com.sun.java.swing.plaf.windows.WindowsInternalFrameTitlePane.ScalableIconUIResource;
+
 import controller.helpers.ModalWindow;
 import exception.NegativeNumberException;
 import javafx.collections.FXCollections;
@@ -23,6 +25,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Scale;
 import scheduler.Scheduler;
 import scheduler.SchedulerFactory;
 import scheduler.Task;
@@ -133,7 +138,7 @@ public class SimulatorController implements Initializable {
 		} else {
 			int executionTime = getIntegerValueFromField(simulationRuntimeField);
 			if (executionTime > 1) {
-				scheduler = factory.getScheduler(schedulerName, tasks, executionTime);
+				scheduler = factory.getScheduler(schedulerName, toSchedule, executionTime);
 
 			} else {
 
@@ -146,7 +151,7 @@ public class SimulatorController implements Initializable {
 		for (Task task : schedule) {
 			System.out.println(task);
 		}
-		drawChart(schedule, scheduler.getEndTime());
+		drawChart(schedule, schedule.size());
 		System.out.println("" + chartGroup.getChildren().size());
 		ModalWindow.displayReport(schedulerName + " Scheduler", scheduler.getReport());
 	}
@@ -250,14 +255,19 @@ public class SimulatorController implements Initializable {
 		}
 
 		for (int xIndex = 0; xIndex < xAxisLength; xIndex++) {
-			Line horizontalLine = new Line();
-			horizontalLine.setStartX(xIndex * xScale);
-			horizontalLine.setStartY(0);
-			horizontalLine.setEndX(xIndex * xScale);
-			horizontalLine.setEndY(yAxisLength);
-			horizontalLine.setStroke(Color.LIGHTGRAY);
-			horizontalLine.setFill(linesColor);
-			chartGroup.getChildren().add(horizontalLine);
+			Line verticalLine = new Line();
+			verticalLine.setStartX(xIndex * xScale);
+			verticalLine.setStartY(0);
+			verticalLine.setEndX(xIndex * xScale);
+			verticalLine.setEndY(yAxisLength);
+			verticalLine.setStroke(Color.LIGHTGRAY);
+			verticalLine.setFill(linesColor);
+			chartGroup.getChildren().add(verticalLine);
+			Text scaleIndex = new Text (xIndex * xScale, 5, xIndex + "");
+			scaleIndex.setFill(Color.BLACK);
+			scaleIndex.getTransforms().add(new Rotate(180, xIndex * xScale, -5));
+			scaleIndex.getTransforms().add(new Scale(-1, 1, xIndex * xScale, -5));
+			chartGroup.getChildren().add(scaleIndex);
 		}
 	}
 
@@ -266,7 +276,6 @@ public class SimulatorController implements Initializable {
 			Task task = schedule.get(step);
 			
 			if (task != null) {
-				System.out.println(" asdads " + task.getId());	
 				int taskId = task.getId();
 				drawStep(step, taskId, colorMapping.get(taskId));
 			} else {
@@ -319,7 +328,7 @@ public class SimulatorController implements Initializable {
 			Color taskColor = colorMapping.get(task.getId());
 			Label taskLabel = new Label("Task " + task.getId());
 			taskLabel.setTextFill(taskColor);
-			taskLabel.setFont(new Font(15));
+			taskLabel.setFont(new Font(17));
 
 			int gridRow = i % (KEYS_GRID_PANE_COUNT + 1);
 			int gridCol = i / KEYS_GRID_PANE_COUNT;

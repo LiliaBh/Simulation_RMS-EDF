@@ -33,7 +33,7 @@ public abstract class Scheduler {
 			}
 			
 			if (flag == true) {
-				lcm = lcm + 1;
+			lcm = lcm + 1;
 			}
 		}
 		endTime = lcm;
@@ -44,10 +44,6 @@ public abstract class Scheduler {
 
 	public String getReport()
     {
-		if (this.report == "") {
-			this.report = "Simulation successful";
-		}
-			
         return report;
     }
 }

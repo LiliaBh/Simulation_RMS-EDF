@@ -89,6 +89,11 @@ public class Task implements Comparable<Task>{
 		 this.count++;
 	 }
 	 
+	 public boolean isValid()
+	 {
+		 return false;
+	 }
+	 
 	//Reset the value of remainingE after task execution.
 	 public void resetExecution()
 	 {
