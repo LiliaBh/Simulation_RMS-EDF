@@ -31,23 +31,24 @@ public class RMS extends Scheduler {
 		}
 		return false;
 	}
+	public void prepareTasks(int time){
+		for (int i = 0; i < allTasks.size(); i++) {
+			Task temp = allTasks.get(i);
+
+			if (time % (temp.period) == 0) {
+
+				for (int j = 0; j < temp.execution; j++) {
+					toSchedule.add(temp);
+				}
+			}
+		}
+	}
 
 	public ArrayList<Task> schedule() {
 		ArrayList<Task> ready = new ArrayList<Task>();
 
 		for (int time = 0; time < endTime; time++) {
-
-			for (int i = 0; i < allTasks.size(); i++) {
-				Task temp = allTasks.get(i);
-
-				if (time % (temp.period) == 0) {
-
-					for (int j = 0; j < temp.execution; j++) {
-						toSchedule.add(temp);
-					}
-				}
-			}
-
+			prepareTasks(time);
 			if (!(toSchedule.isEmpty())) {
 				Collections.sort(toSchedule);
 				ready.add(toSchedule.remove(0));
