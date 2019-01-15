@@ -13,6 +13,48 @@ public abstract class Scheduler {
 	public void setReport(String report) {
 		this.report = report;
 	}
+	
+	public int checkSchedule(ArrayList<Task> ready) {
+		boolean flag = false;
+		String report = "Successfully Scheduled";
+		int errorAt = ready.size();
+		
+		for (int i = 0; i < allTasks.size(); i++) {
+			Task temp = allTasks.get(i);
+			int period = temp.period;
+			int execution = temp.execution;
+			int count = 0;
+
+			for (int j = 0; j < ready.size(); j++) {
+				Task test = ready.get(j);
+				if (!(test == (null))) {
+			
+					if (test.id == temp.id) {
+						count++;
+					}
+					
+					if (j != 0 && (j + 1) % period == 0) {
+					
+						if (count < execution) {
+							flag = true;
+							report = "Tasks are not schedulable: Task " + temp.id + " is missing its deadline " + ( j + 1) + " with " + (execution - count) + " execution step(s) missing.";
+							errorAt = j + 1 ;
+							break;
+						}
+						count=0;
+						
+					}
+				}
+			}
+			
+			if (flag) {
+				break;
+			}
+		}
+		
+		setReport(report);
+		return errorAt;
+	}
 
 	//A method to update if schedule unschedulable.
 	//abstract public void setUnschedulable(ArrayList<Task> array);
