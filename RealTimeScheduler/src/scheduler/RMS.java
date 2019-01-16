@@ -46,15 +46,14 @@ public class RMS extends Scheduler {
 
 	public ArrayList<Task> schedule() {
 		ArrayList<Task> ready = new ArrayList<Task>();
-
+		for(int time = 0; time < endTime;time++){
+			ready.add(null);
+		}
 		for (int time = 0; time < endTime; time++) {
 			prepareTasks(time);
 			if (!(toSchedule.isEmpty())) {
 				Collections.sort(toSchedule);
-				ready.add(toSchedule.remove(0));
-
-			} else {
-				ready.add(null);
+				ready.set(time, toSchedule.remove(0));
 			}
 		}
 
