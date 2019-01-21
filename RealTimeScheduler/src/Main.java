@@ -20,7 +20,7 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(mainViewLocation);
 
         primaryStage.setTitle("Real-Time Scheduler Simulator");
-        primaryStage.setScene(new Scene(root, 900, 540));
+        primaryStage.setScene(new Scene(root, 900, 570));
         primaryStage.setResizable(false);
         primaryStage.show();
     }

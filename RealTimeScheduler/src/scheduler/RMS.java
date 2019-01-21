@@ -24,8 +24,7 @@ public class RMS extends Scheduler {
 			Task temp = allTasks.get(i);
 			ui += (double) temp.execution / temp.period;
 		}
-		System.out.println(ui);
-		System.out.println(n * (Math.pow(2, 1 / n) - 1));
+
 		if (ui < (n * (Math.pow(2, 1 / n) - 1))) {
 			return true;
 		}
