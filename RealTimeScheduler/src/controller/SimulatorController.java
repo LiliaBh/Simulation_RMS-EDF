@@ -1,24 +1,22 @@
 package controller;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
-import com.sun.java.swing.plaf.windows.WindowsInternalFrameTitlePane.ScalableIconUIResource;
 
 import controller.helpers.ModalWindow;
+import exception.MalformedConfigFileException;
 import exception.NegativeNumberException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -31,22 +29,25 @@ import javafx.scene.transform.Scale;
 import scheduler.Scheduler;
 import scheduler.SchedulerFactory;
 import scheduler.Task;
+import utils.ConfigFile;
+import utils.ConfigFilesReader;
 
 public class SimulatorController implements Initializable {
 
-	public static final int MAX_TASKS = 10;
+	private static final int MAX_TASKS = 10;
+	private static final int KEYS_GRID_PANE_COUNT = 5;
 
 	private static final Color[] COLORS = { Color.LIGHTCORAL, Color.LIGHTBLUE, Color.LIGHTGREEN, Color.LIGHTSALMON,
 			Color.MEDIUMPURPLE, Color.LIGHTPINK, Color.LIGHTSEAGREEN, Color.LIGHTSTEELBLUE, Color.MEDIUMPURPLE,
 			Color.LIGHTCYAN, };
 
-	public static final int KEYS_GRID_PANE_COUNT = 5;
 
 	// Buttons
 	public Button startButton;
 	public Button resetButton;
 	public Button addTaskButton;
 	public Button deleteTaskButton;
+	public Menu menu;
 
 	// Fields
 	public ChoiceBox<String> schedulerChoiceBox;
@@ -59,7 +60,7 @@ public class SimulatorController implements Initializable {
 	public TableColumn idColumn;
 	public TableColumn periodColumn;
 	public TableColumn executionColumn;
-	public ObservableList<Task> tableData;
+	private ObservableList<Task> tableData;
 
 	// Chart
 	public Pane chartPane;
@@ -89,9 +90,9 @@ public class SimulatorController implements Initializable {
 		idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
 		periodColumn.setCellValueFactory(new PropertyValueFactory<>("period"));
 		executionColumn.setCellValueFactory(new PropertyValueFactory<>("execution"));
-
 		tableView.setItems(tableData);
 		refreshTable();
+        initMenu();
 	}
 
 	public void handleAddTask() {
@@ -107,8 +108,6 @@ public class SimulatorController implements Initializable {
 			tasks.add(new Task(period, execution, currentTaskId));
 			currentTaskId++;
 			refreshTable();
-		} else {
-
 		}
 
 		periodField.clear();
@@ -126,7 +125,7 @@ public class SimulatorController implements Initializable {
 			return;
 		}
 
-		ArrayList<Task> toSchedule = new ArrayList<Task>();
+		ArrayList<Task> toSchedule = new ArrayList<>();
 		
 		for ( Task t: tasks) {
 			toSchedule.add(new Task(t.getPeriod(), t.getExecution(), t.getId()));
@@ -147,12 +146,8 @@ public class SimulatorController implements Initializable {
 		}
 
 		ArrayList<Task> schedule = scheduler.schedule();
-		// asdasd
-		for (Task task : schedule) {
-			System.out.println(task);
-		}
+
 		drawChart(schedule, schedule.size());
-		System.out.println("" + chartGroup.getChildren().size());
 		ModalWindow.displayReport(schedulerName + " Scheduler", scheduler.getReport());
 	}
 
@@ -166,12 +161,22 @@ public class SimulatorController implements Initializable {
 		refreshTable();
 	}
 
-	public void refreshTable() {
+    public void reset() {
+        resetChart();
+        simulationRuntimeField.clear();
+        executionField.clear();
+        periodField.clear();
+        tasks = new ArrayList<>();
+        currentTaskId = 1;
+        refreshTable();
+    }
+
+	private void refreshTable() {
 		tableData = FXCollections.observableArrayList(tasks);
 		tableView.setItems(tableData);
 	}
 
-	public int getIntegerValueFromField(TextField field) {
+	private int getIntegerValueFromField(TextField field) {
 		String value = field.textProperty().getValue().trim();
 
 		if (value.equals("")) {
@@ -193,11 +198,11 @@ public class SimulatorController implements Initializable {
 		}
 	}
 
-	public void removeTask(int id) {
+	private void removeTask(int id) {
 		tasks.removeIf(t -> (t.getId() == id));
 	}
 
-	public void drawChart(ArrayList<Task> schedule, int endTime) {
+	private void drawChart(ArrayList<Task> schedule, int endTime) {
 		initChart(endTime);
 		drawCartesianPlane();
 		initColorMapping();
@@ -205,12 +210,12 @@ public class SimulatorController implements Initializable {
 		drawChartKeys();
 	}
 
-	public void initChart(int executionTime) {
+	private void initChart(int executionTime) {
 		xAxisLength = executionTime;
 		yAxisLength = MAX_TASKS;
 	}
 
-	public void drawCartesianPlane() {
+	private void drawCartesianPlane() {
 		double xAxisStart = 0;
 		double yAxisStart = 0;
 		double xAxisEnd = chartPane.getPrefWidth() - 50;
@@ -271,7 +276,7 @@ public class SimulatorController implements Initializable {
 		}
 	}
 
-	public void drawExecution(ArrayList<Task> schedule) {
+	private void drawExecution(ArrayList<Task> schedule) {
 		for (int step = 0; step < schedule.size(); step++) {
 			Task task = schedule.get(step);
 			
@@ -338,17 +343,7 @@ public class SimulatorController implements Initializable {
 		}
 	}
 
-	public void reset() {
-		resetChart();
-		simulationRuntimeField.clear();
-		executionField.clear();
-		periodField.clear();
-		tasks = new ArrayList<>();
-		currentTaskId = 1;
-		refreshTable();
-	}
-
-	public void resetChart() {
+	private void resetChart() {
 		for (Label label : legendLabels) {
 			legendGridPane.getChildren().remove(label);
 		}
@@ -356,4 +351,36 @@ public class SimulatorController implements Initializable {
 		legendLabels = new ArrayList<>();
 		chartGroup.getChildren().clear();
 	}
+
+	private void initMenu()
+    {
+        ObservableList<MenuItem> items = menu.getItems();
+        ArrayList<String> fileNames = ConfigFilesReader.getAvailableFileNames();
+
+        for (String fileName : fileNames) {
+            MenuItem menuItem = new MenuItem(fileName);
+            items.add(menuItem);
+
+            EventHandler<ActionEvent> event = e -> {
+                try {
+                    ConfigFile configFile = ConfigFilesReader.readConfigFile(fileName);
+                    populateFormFieldsFromConfigFile(configFile);
+                } catch (MalformedConfigFileException el) {
+                    ModalWindow.displayError("The configuration file " + fileName + " is malformed.\n Please contact the support at support@rms-edf-simulation.de for more information.");
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            };
+
+            menuItem.setOnAction(event);
+        }
+    }
+
+    private void populateFormFieldsFromConfigFile(ConfigFile configFile) {
+	    schedulerChoiceBox.setValue(configFile.getScheduler());
+	    simulationRuntimeField.setText(configFile.getExecutionTime());
+	    tasks = configFile.getTasks();
+        currentTaskId = tasks.size();
+        refreshTable();
+    }
 }

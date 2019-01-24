@@ -24,36 +24,35 @@ public class RMS extends Scheduler {
 			Task temp = allTasks.get(i);
 			ui += (double) temp.execution / temp.period;
 		}
-		System.out.println(ui);
-		System.out.println(n * (Math.pow(2, 1 / n) - 1));
+
 		if (ui < (n * (Math.pow(2, 1 / n) - 1))) {
 			return true;
 		}
 		return false;
 	}
+	public void prepareTasks(int time){
+		for (int i = 0; i < allTasks.size(); i++) {
+			Task temp = allTasks.get(i);
+
+			if (time % (temp.period) == 0) {
+
+				for (int j = 0; j < temp.execution; j++) {
+					toSchedule.add(temp);
+				}
+			}
+		}
+	}
 
 	public ArrayList<Task> schedule() {
 		ArrayList<Task> ready = new ArrayList<Task>();
-
+		for(int time = 0; time < endTime;time++){
+			ready.add(null);
+		}
 		for (int time = 0; time < endTime; time++) {
-
-			for (int i = 0; i < allTasks.size(); i++) {
-				Task temp = allTasks.get(i);
-
-				if (time % (temp.period) == 0) {
-
-					for (int j = 0; j < temp.execution; j++) {
-						toSchedule.add(temp);
-					}
-				}
-			}
-
+			prepareTasks(time);
 			if (!(toSchedule.isEmpty())) {
 				Collections.sort(toSchedule);
-				ready.add(toSchedule.remove(0));
-
-			} else {
-				ready.add(null);
+				ready.set(time, toSchedule.remove(0));
 			}
 		}
 
