@@ -91,7 +91,7 @@ public class EDF extends Scheduler {
 					array.add(null);
 				}
 			}
-			int errorAt = checkSchedule(array);
+			int dummy = checkSchedule(array);
 			return array;
 	}
 	
