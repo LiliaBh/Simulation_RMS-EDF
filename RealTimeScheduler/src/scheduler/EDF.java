@@ -90,7 +90,7 @@ public class EDF extends Scheduler {
 					array.add(null);
 				}
 			}
-			int errorAt = checkSchedule(array);
+			int dummy = checkSchedule(array);
 			return array;
 	}
 	
@@ -197,42 +197,5 @@ public class EDF extends Scheduler {
 		Task t= result.get(result.size()-1);
 		return t;
 	}
-	
-// 	public static void main(String[] args)
-//	{
-//		Task a = new Task(2, 1, 1);
-//		Task b = new Task(3, 1, 2);
-//		Task c = new Task(4, 1, 3);
-//
-//		ArrayList<Task> tasks = new ArrayList<Task>();
-//		tasks.add(a);
-//		tasks.add(b);
-//
-//		tasks.add(c);
-//
-//		EDF schedule = new EDF(tasks);
-//		if(!schedule.isSchedulable())
-//		{
-//			ArrayList<Task> result1 = schedule.generateNonWorkingSchedule();
-//
-//			for(int i=0; i<result1.size(); i++)
-//			{
-//				Task temp=result1.get(i);
-//				if(temp!=null)
-//				{
-//					System.out.print(temp.getId()+" ");
-//				}
-//				else
-//				{
-//					System.out.print("x ");
-//				}
-//			}
-//			System.out.println(schedule.getReport());
-//		}
-//		else
-//		{
-//			System.out.println("schedulable");
-//		}
-//	}
 
 }
