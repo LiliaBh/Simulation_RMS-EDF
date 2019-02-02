@@ -31,28 +31,34 @@ public final class ConfigFilesReader {
         BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
         String line = bufferedReader.readLine();
 
-        if (line != null) {
-            String[] firstLineArr = line.split(",");
-            String scheduler = firstLineArr[0];
-            String executionTime = "";
+        try {
 
-            if (firstLineArr.length > 1 ){
-                executionTime = firstLineArr[1] == null ? "" : firstLineArr[1];
+            if (line != null) {
+                String[] firstLineArr = line.split(",");
+                String scheduler = firstLineArr[0];
+                String executionTime = "";
+
+                if (firstLineArr.length > 1 ){
+                    executionTime = firstLineArr[1] == null ? "" : firstLineArr[1];
+                }
+
+                configFile.setScheduler(scheduler);
+                configFile.setExecutionTime(executionTime);
             }
 
-            configFile.setScheduler(scheduler);
-            configFile.setExecutionTime(executionTime);
+            while((line = bufferedReader.readLine()) != null) {
+                String[] lineArr = line.split(",");
+                String id = lineArr[0];
+                String period = lineArr[1];
+                String execution = lineArr[2];
+
+                configFile.addTask(period, execution, id);
+            }
+
+            return configFile;
+
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new MalformedConfigFileException();
         }
-
-        while((line = bufferedReader.readLine()) != null) {
-            String[] lineArr = line.split(",");
-            String id = lineArr[0];
-            String period = lineArr[1];
-            String execution = lineArr[2];
-
-            configFile.addTask(period, execution, id);
-        }
-
-        return configFile;
     }
 }
