@@ -104,10 +104,12 @@ public class SimulatorController implements Initializable {
 		int period = getIntegerValueFromField(periodField);
 		int execution = getIntegerValueFromField(executionField);
 
-		if (!(period < 0 || execution < 0)) {
+		if (period > 0 || execution > 0) {
 			tasks.add(new Task(period, execution, currentTaskId));
 			currentTaskId++;
 			refreshTable();
+		} else {
+			ModalWindow.displayError("Execution time and period must be greater than 0.");
 		}
 
 		periodField.clear();
