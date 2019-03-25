@@ -21,3 +21,6 @@ id, period and execution : must be numbers. An arbitrary number of tasks can be 
 or more than 10 will result in an error when the simulation starts.<br/>
 <br/><br/>
 ==> If these criteria are not met, an error will be displayed.
+
+### JavaFx Setup
+https://openjfx.io/
